@@ -1,7 +1,7 @@
 /*
   support_crash_recorder.ino - record the call stack in RTC in case of crash
 
-  Copyright (C) 2020  Stephan Hadinger, Theo Arends,
+  Copyright (C) 2021  Stephan Hadinger, Theo Arends,
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifdef ESP8266
 
 const uint32_t crash_magic = 0x53415400;   // Stack trace magic number (TASx)
 const uint32_t crash_rtc_offset = 32;      // Offset in RTC memory skipping OTA used block
@@ -48,6 +50,7 @@ void CmndCrash(void)
 {
   volatile uint32_t dummy;
   dummy = *((uint32_t*) 0x00000000);
+  (void)dummy;
 }
 
 // Do an infinite loop to trigger WDT watchdog
@@ -109,3 +112,5 @@ void CrashDump(void)
 
   ResponseJsonEnd();
 }
+
+#endif  // ESP8266
